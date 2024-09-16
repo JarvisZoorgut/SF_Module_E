@@ -10,7 +10,7 @@ const sendBtn = document.getElementById('send-btn');
 
 let currentChatId = null;
 let socket = null;
-let token = null;  // Будем использовать для авторизации
+let token = null;  // JWT-токен для авторизации
 
 // Логин пользователя
 loginBtn.addEventListener('click', () => {
@@ -24,20 +24,20 @@ loginBtn.addEventListener('click', () => {
         },
         body: JSON.stringify({ username, password }),
     })
-    .then(response => response.json())
-    .then(data => {
-        token = data.access;
-        loginForm.style.display = 'none';
-        messenger.style.display = 'block';
-        loadChats();
-        loadUsers();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            token = data.access;  // Сохраняем токен
+            loginForm.style.display = 'none';
+            messenger.style.display = 'block';
+            loadChats();
+            loadUsers();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 });
 
-// Загрузка чатов
+// Загрузка списка чатов
 function loadChats() {
     fetch('/api/chats/', {
         method: 'GET',
@@ -45,19 +45,19 @@ function loadChats() {
             'Authorization': `Bearer ${token}`,
         }
     })
-    .then(response => response.json())
-    .then(chats => {
-        chatList.innerHTML = '';
-        chats.forEach(chat => {
-            const li = document.createElement('li');
-            li.textContent = chat.name;
-            li.addEventListener('click', () => openChat(chat.id));
-            chatList.appendChild(li);
+        .then(response => response.json())
+        .then(chats => {
+            chatList.innerHTML = '';  // Очищаем список перед перезагрузкой
+            chats.forEach(chat => {
+                const li = document.createElement('li');
+                li.textContent = chat.name;
+                li.addEventListener('click', () => openChat(chat.id));
+                chatList.appendChild(li);
+            });
         });
-    });
 }
 
-// Загрузка пользователей
+// Загрузка списка пользователей
 function loadUsers() {
     fetch('/api/users/', {
         method: 'GET',
@@ -65,16 +65,16 @@ function loadUsers() {
             'Authorization': `Bearer ${token}`,
         }
     })
-    .then(response => response.json())
-    .then(users => {
-        userList.innerHTML = '';
-        users.forEach(user => {
-            const li = document.createElement('li');
-            li.textContent = user.username;
-            li.addEventListener('click', () => createChatWithUser(user.id));
-            userList.appendChild(li);
+        .then(response => response.json())
+        .then(users => {
+            userList.innerHTML = '';  // Очищаем список перед перезагрузкой
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = user.username;
+                li.addEventListener('click', () => createChatWithUser(user.id));
+                userList.appendChild(li);
+            });
         });
-    });
 }
 
 // Открытие чата
@@ -90,7 +90,7 @@ function openChat(chatId) {
     // Подключение нового WebSocket
     socket = new WebSocket(`ws://localhost:8000/ws/chat/${chatId}/`);
 
-    socket.onmessage = function(event) {
+    socket.onmessage = function (event) {
         const data = JSON.parse(event.data);
         const message = document.createElement('div');
         message.textContent = `${data.sender}: ${data.message}`;
@@ -104,14 +104,14 @@ function openChat(chatId) {
             'Authorization': `Bearer ${token}`,
         }
     })
-    .then(response => response.json())
-    .then(messages => {
-        messages.forEach(message => {
-            const div = document.createElement('div');
-            div.textContent = `${message.sender.username}: ${message.content}`;
-            messageList.appendChild(div);
+        .then(response => response.json())
+        .then(messages => {
+            messages.forEach(message => {
+                const div = document.createElement('div');
+                div.textContent = `${message.sender.username}: ${message.content}`;
+                messageList.appendChild(div);
+            });
         });
-    });
 }
 
 // Отправка сообщения
@@ -125,7 +125,7 @@ sendBtn.addEventListener('click', () => {
     }
 });
 
-// Создание нового чата с пользователем
+// Создание чата с пользователем
 function createChatWithUser(userId) {
     fetch('/api/chats/', {
         method: 'POST',
@@ -135,9 +135,9 @@ function createChatWithUser(userId) {
         },
         body: JSON.stringify({ members: [userId] }),
     })
-    .then(response => response.json())
-    .then(chat => {
-        loadChats();  // Обновляем список чатов
-        openChat(chat.id);
-    });
+        .then(response => response.json())
+        .then(chat => {
+            loadChats();  // Обновляем список чатов
+            openChat(chat.id);
+        });
 }

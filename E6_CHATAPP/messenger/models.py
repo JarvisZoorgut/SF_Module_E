@@ -8,6 +8,20 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     name = models.CharField(max_length=100, blank=True)
 
+    # Указываем другие related_name, чтобы избежать конфликтов с auth.User
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='messenger_user_set',  # Изменяем related_name
+        blank=True,
+        help_text='The groups this user belongs to.'
+    )
+
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='messenger_user_permissions',  # Изменяем related_name
+        blank=True,
+        help_text='Specific permissions for this user.'
+    )
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)

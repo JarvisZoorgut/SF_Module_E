@@ -1,15 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messenger</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- если используете статику -->
 </head>
+
 <body>
 
     <div id="app">
-        <!-- Форма авторизации -->
         <div id="login-form">
             <h2>Login</h2>
             <input type="text" id="username" placeholder="Username" />
@@ -17,10 +20,8 @@
             <button id="login-btn">Login</button>
         </div>
 
-        <!-- Чаты и сообщения -->
         <div id="messenger" style="display: none;">
             <h2>Messenger</h2>
-
             <div id="chat-section">
                 <h3>Chats</h3>
                 <ul id="chat-list"></ul>
@@ -40,6 +41,7 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
 </body>
+
 </html>
