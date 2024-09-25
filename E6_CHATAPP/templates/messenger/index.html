@@ -22,6 +22,11 @@
 
         <div id="messenger" style="display: none;">
             <h2>Messenger</h2>
+                {% if user.is_authenticated %}
+                    <p>Welcome, {{ user.username }}!</p>
+                {% else %}
+                    <p>You are not logged in.</p>
+                {% endif %}
             <div id="chat-section">
                 <h3>Chats</h3>
                 <ul id="chat-list"></ul>
