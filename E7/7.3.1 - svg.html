@@ -1,0 +1,29 @@
+<h1>Работа с SVG 2</h1>
+<h3>Рисуем график</h3>
+
+<div>
+  <svg height="200" width="300">
+    <!--  ось Y  --> 
+    <line style="stroke:rgb(0,0,0);stroke-width:2"
+      x1="0" y1="0"
+      x2="0" y2="200"
+    />
+    <!--  ось X  -->
+    <line style="stroke:rgb(0,0,0);stroke-width:2"
+      x1="0" y1="200"
+      x2="300" y2="200"
+    />
+    <!--  График по точкам в атрибуте points  -->
+    <polyline
+      style="fill:none;stroke:rgb(255,0,0);stroke-width:3"
+      points="0,200 30,100 60,150 90,50 120,140 150,140 180,120 210,140 300,0"
+    />
+  </svg>
+</div>
+
+<br/>
+
+<h3>Второй график будем делать с помощью JS</h3>
+<button class="btn j-btn-test">Кнопка построения графика</button>
+
+<div class="j-chart"></div>
